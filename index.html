@@ -84,9 +84,10 @@
 <div class="container">
     <div class="header">財富人生互動試算</div>
     
+    <!-- 第一頁：登入與說明 -->
     <div class="step active" id="step0" style="justify-content: center;">
-        <div class="script-box" style="text-align: center; font-weight: bold; color: var(--m-blue);">
-            歡迎使用財富人生試算系統 ✨<br>請輸入下方資訊以開啟您專屬的財富藍圖。
+        <div class="script-box">
+            你有聽過1998嗎？<br>你想想喔，以一個剛畢業的社會新鮮人，起薪三萬是不是還不錯？如果每年保證加薪3%，年薪保證14個月呢？是不是很不錯。那從25歲工作到55歲，30年就是一共賺了1998萬，這就是1998~<br><br>接下來我們一起來看看專屬我們的財富人生試算！
         </div>
         <div style="margin-bottom:8px;">
             <label style="display:block; font-weight:bold; margin-bottom:3px; font-size:0.82rem;">通訊處</label>
@@ -100,44 +101,55 @@
         <button class="btn-cute-center" id="startBtn" onclick="nextStep('_income')" disabled>✨ 開始試算 Go!</button>
     </div>
 
+    <!-- （一）設定您專屬的起點：包含四個拉桿 -->
     <div class="step" id="step_income">
-        <div class="q-title">（零）設定您的專屬起點</div>
-        <div class="script-box">
-            每個人的人生起點都不同。請依您目前的現況，拉動設定您的「月收入」以及「年領月數」，我們將幫您算出現實生活中，30年總共能賺進多少財富！
+        <div class="q-title">（一）設定您專屬的起點</div>
+        <div class="script-box" style="padding: 6px 10px; margin-bottom: 6px;">
+            請設定您的現況與未來規劃，系統將以每年保證加薪 3%（複利）計算您的生涯總收入。
         </div>
         
-        <div style="margin-bottom: 6px;">
-            <div class="val-display" style="font-size:1.05rem; text-align:left;">目前我的月收入：<span id="v_inc_m" style="color:var(--m-orange); font-weight:bold;">3 萬</span></div>
+        <div style="margin-bottom: 4px;">
+            <div class="val-display" style="font-size:0.88rem; text-align:left; margin:0;">我的月收入：<span id="v_inc_m" style="color:var(--m-orange); font-weight:bold;">3 萬</span></div>
             <input type="range" id="q_inc_m" min="1" max="30" step="0.5" value="3" oninput="calculate()">
         </div>
         
-        <div style="margin-bottom: 6px;">
-            <div class="val-display" style="font-size:1.05rem; text-align:left;">每年含年終各領幾個月：<span id="v_inc_y" style="color:var(--m-orange); font-weight:bold;">14 個月</span></div>
+        <div style="margin-bottom: 4px;">
+            <div class="val-display" style="font-size:0.88rem; text-align:left; margin:0;">每年含年終各領幾個月：<span id="v_inc_y" style="color:var(--m-orange); font-weight:bold;">14 個月</span></div>
             <input type="range" id="q_inc_y" min="12" max="24" step="0.5" value="14" oninput="calculate()">
         </div>
 
-        <div class="stat-card" style="background: #E6F7FF; border: 1px solid #91D5FF; margin-top: 12px;">
-            <div class="stat-line" style="font-size: 0.85rem;"><span>第一年預估年薪：</span><b id="inc_year1" style="color:var(--m-blue);">42 萬</b></div>
-            <div class="stat-line" style="font-size: 0.85rem; margin-top: 2px;"><span>💡 考慮每年保證加薪 3% (複利計算)</span></div>
-            <div class="stat-line" style="font-size: 0.95rem; font-weight: bold; margin-top: 4px;"><span>30年預計總收入：</span><b id="inc_total_30" style="color:green; font-size:1.2rem;">-- 萬</b></div>
+        <div style="margin-bottom: 4px;">
+            <div class="val-display" style="font-size:0.88rem; text-align:left; margin:0;">我現在的年齡：<span id="v_age" style="color:var(--m-orange); font-weight:bold;">25 歲</span></div>
+            <input type="range" id="q_age" min="18" max="65" step="1" value="25" oninput="calculate()">
+        </div>
+
+        <div style="margin-bottom: 4px;">
+            <div class="val-display" style="font-size:0.88rem; text-align:left; margin:0;">我預計工作幾年後退休：<span id="v_work_years" style="color:var(--m-orange); font-weight:bold;">30 年</span></div>
+            <input type="range" id="q_work_years" min="1" max="50" step="1" value="30" oninput="calculate()">
+        </div>
+
+        <div class="stat-card" style="background: #E6F7FF; border: 1px solid #91D5FF; padding: 6px 10px; margin-top: 4px;">
+            <div class="stat-line"><span>預計退休年齡：</span><b id="retire_age_display" style="color:var(--m-blue);">55 歲</b></div>
+            <div class="stat-line" style="font-weight: bold; margin-top: 2px;"><span><span class="dynamic-years">30</span>年保薪加3%總收入：</span><b id="inc_total_30" style="color:green; font-size:1.1rem;">-- 萬</b></div>
         </div>
 
         <div class="balance-footer">
             <div class="btn-group">
                 <button class="btn btn-back" onclick="prevStep(0)">回首頁</button>
-                <button class="btn btn-next" onclick="nextStep(1)">確認總收入，開始規劃</button>
+                <button class="btn btn-next" onclick="nextStep(1)">開始規劃支出</button>
             </div>
         </div>
     </div>
 
+    <!-- （二）基本開銷 -->
     <div class="step" id="step1">
-        <div class="q-title">（一）基本開銷</div>
+        <div class="q-title">（二）基本開銷</div>
         <div class="script-box">賺錢就是要花的，對吧？我們來算算要花掉多少錢喔，首先是基本開銷，你覺得一個月要花多少呢？</div>
         <div class="val-display" id="v1">3 萬</div>
         <input type="range" id="q1" min="1" max="15" step="0.5" value="3" oninput="calculate()">
         <div class="stat-card">
             <div class="stat-line"><span>每年開銷：</span><b id="y1">36 萬</b></div>
-            <div class="stat-line"><span>30年總計：</span><b id="t1" style="color:red;">1080 萬</b></div>
+            <div class="stat-line"><span class="dynamic-years-text">30年總計：</span><b id="t1" style="color:red;">1080 萬</b></div>
         </div>
         <div class="balance-footer">
             <div class="bal-row"><span class="bal-label">剩下萬元可花：</span><span class="bal-val" id="bal1"></span></div>
@@ -145,14 +157,15 @@
         </div>
     </div>
 
+    <!-- （三）買車規劃 -->
     <div class="step" id="step2">
-        <div class="q-title">（二）買車規劃</div>
+        <div class="q-title">（三）買車規劃</div>
         <div class="script-box" style="margin-bottom:4px; padding:6px 10px;">那還有哪些開銷呢？是不是會想買車？一台車花多少萬買你覺得比較好？</div>
         <div class="val-display" id="v2_buy" style="margin:0;">80 萬</div>
         <input type="range" id="q2_buy" min="0" max="400" step="10" value="80" oninput="calculate()">
         <div class="stat-card" style="margin:2px 0; padding:6px 10px;">
             <div class="stat-line"><span>一台車用十年花費：</span><b id="v2_single">80 萬</b></div>
-            <div class="stat-line"><span>30年共三台車花費：</span><b id="car30_display" style="color:red;">240 萬</b></div>
+            <div class="stat-line"><span id="car_title_display">30年共三台車花費：</span><b id="car30_display" style="color:red;">240 萬</b></div>
         </div>
         <div class="divider"></div>
         <div class="script-box" style="margin-bottom:4px; padding:6px 10px;">再來，車子買來要加油，要停車位、要稅金等等，一個月多少？</div>
@@ -160,7 +173,7 @@
         <input type="range" id="q2_maint" min="0" max="3" step="0.1" value="0.8" oninput="calculate()">
         <div class="stat-card" style="margin:2px 0; padding:6px 10px;">
             <div class="stat-line"><span>養車年花費：</span><b id="y2">9.6 萬</b></div>
-            <div class="stat-line"><span>養車30年花費總計：</span><b id="t2" style="color:red;">288 萬</b></div>
+            <div class="stat-line"><span class="dynamic-years-text">養車30年花費總計：</span><b id="t2" style="color:red;">288 萬</b></div>
         </div>
         <div class="balance-footer">
             <div class="bal-row"><span class="bal-label">剩下萬元可花：</span><span class="bal-val" id="bal2"></span></div>
@@ -168,14 +181,15 @@
         </div>
     </div>
 
+    <!-- （四）出國旅遊 -->
     <div class="step" id="step3">
-        <div class="q-title">（三）出國旅遊</div>
-        <div class="script-box">然後，我們這麼辛苦工作，每年一次招待自己出國旅遊不為過吧？你覺得花幾萬比較適合？那三十年就要多少錢？</div>
+        <div class="q-title">（四）出國旅遊</div>
+        <div class="script-box">然後，我們這麼辛苦工作，每年一次招待自己出國旅遊不為過吧？你覺得花幾萬比較適合？那工作期間內總共要多少錢？</div>
         <div class="val-display" id="v3">5 萬</div>
         <input type="range" id="q3" min="0" max="30" step="1" value="5" oninput="calculate()">
         <div class="stat-card">
             <div class="stat-line"><span>旅遊年花費：</span><b id="y3">5 萬</b></div>
-            <div class="stat-line"><span>旅遊30年總費：</span><b id="t3" style="color:red;">150 萬</b></div>
+            <div class="stat-line"><span class="dynamic-years-text">旅遊30年總費：</span><b id="t3" style="color:red;">150 萬</b></div>
         </div>
         <div class="balance-footer">
             <div class="bal-row"><span class="bal-label">剩下萬元可花：</span><span class="bal-val" id="bal3"></span></div>
@@ -183,14 +197,15 @@
         </div>
     </div>
 
+    <!-- （五）成家買房 -->
     <div class="step" id="step4">
-        <div class="q-title">（四）成家買房</div>
-        <div class="script-box">你會不會希望買一間房，假設要花多少萬買房，利息加上一些費用三十年也得再多支出500萬，扣掉這些，是不是已經不夠用了</div>
+        <div class="q-title">（五）成家買房</div>
+        <div class="script-box">你會不會希望買一間房，假設要花多少萬買房，利息加上一些費用支出也得再多支出500萬，扣掉這些，是不是已經不夠用了</div>
         <div class="val-display" id="v4">1000 萬</div>
         <input type="range" id="q4" min="0" max="4000" step="50" value="1000" oninput="calculate()">
         <div class="stat-card">
             <div class="stat-line"><span>買房預算：</span><b id="v4_base">1000 萬</b></div>
-            <div class="stat-line"><span>30年購房總支出(含利息)：</span><b id="t4" style="color:red;">1500 萬</b></div>
+            <div class="stat-line"><span>購房總支出(含利息)：</span><b id="t4" style="color:red;">1500 萬</b></div>
         </div>
         <div class="balance-footer">
             <div class="bal-row"><span class="bal-label">剩下萬元可花：</span><span class="bal-val" id="bal4"></span></div>
@@ -198,8 +213,9 @@
         </div>
     </div>
 
+    <!-- （六）子女教育費 -->
     <div class="step" id="step5">
-        <div class="q-title">（五）子女教育費</div>
+        <div class="q-title">（六）子女教育費</div>
         <div class="script-box">如果還要生小孩養一個小孩，保守估計1個月花多少萬，1年就是乘12，是不是缺更多了？</div>
         <div class="val-display" id="v5">2 萬</div>
         <input type="range" id="q5" min="0" max="15" step="0.5" value="2" oninput="calculate()">
@@ -213,8 +229,9 @@
         </div>
     </div>
 
+    <!-- （七）準備退休金 -->
     <div class="step" id="step6">
-        <div class="q-title">（六）準備退休金</div>
+        <div class="q-title">（七）準備退休金</div>
         <div class="script-box">就算買房、生小孩都不是你會想做的事，那退休金呢？退休是不是靠自己準備，你覺得要多少錢才可以退休？</div>
         <div class="val-display" id="v6">1000 萬</div>
         <input type="range" id="q6" min="0" max="3000" step="50" value="1000" oninput="calculate()">
@@ -227,6 +244,7 @@
         </div>
     </div>
 
+    <!-- 總結結算頁面 -->
     <div class="step" id="step7" style="justify-content: center; padding: 5px 15px;">
         <div id="res_header" style="text-align:center; margin-bottom:5px; font-weight:bold; color:var(--m-blue); font-size:0.95rem;"></div>
         
@@ -235,10 +253,10 @@
         </div>
         
         <div style="background:var(--m-blue); color:white; border-radius:12px; padding:10px 14px; box-shadow:0 6px 12px rgba(0,0,0,0.15);">
-            <div class="report-item" style="font-weight:bold; border-bottom:1.5px solid white; padding-bottom:3px;"><span>項目明細 (工作30年)</span><span>預算金額</span></div>
+            <div class="report-item" style="font-weight:bold; border-bottom:1.5px solid white; padding-bottom:3px;"><span id="report_title_years">項目明細 (工作30年)</span><span>預算金額</span></div>
             <div class="report-item" style="background:rgba(255,255,255,0.1); font-weight:bold;"><span>預估生涯總收入</span><span id="r_inc_total"></span></div>
             <div class="report-item"><span>1. 基本開銷總計</span><span id="r1"></span></div>
-            <div class="report-item"><span>2. 車輛花費 (3台+養車)</span><span id="r2"></span></div>
+            <div class="report-item"><span>2. 車輛花費 (含養車)</span><span id="r2"></span></div>
             <div class="report-item"><span>3. 出國旅遊總計</span><span id="r3"></span></div>
             <div class="report-item"><span>4. 房屋總支出 (含利息)</span><span id="r4"></span></div>
             <div class="report-item"><span>5. 子女養育總費 (20年)</span><span id="r5"></span></div>
@@ -252,7 +270,8 @@
 
 <script>
     let currentStep = 0;
-    let income = 1998; // 改為動態變數，初始值雖設 1998 但會隨滑桿即時覆蓋
+    let income = 1998; 
+    let workYears = 30; // 動態工作年期，預設 30 年
     const ALLOWED_UNITS = ['宏觀', '宏觀通訊處', '華山', '華山通訊處'];
 
     function checkStart() {
@@ -289,70 +308,86 @@
     }
 
     function calculate() {
-        // 1. 動態計算自訂收入（第一階段問題）與 30 年複利保證加薪 3%
+        // 1. 讀取與計算（一）自訂起點的四大連動數值
         const incM = parseFloat(document.getElementById('q_inc_m').value);
         const incY = parseFloat(document.getElementById('q_inc_y').value);
+        const currentAge = parseInt(document.getElementById('q_age').value);
+        workYears = parseInt(document.getElementById('q_work_years').value);
+
         document.getElementById('v_inc_m').innerText = incM + " 萬";
         document.getElementById('v_inc_y').innerText = incY + " 個月";
+        document.getElementById('v_age').innerText = currentAge + " 歲";
+        document.getElementById('v_work_years').innerText = workYears + " 年";
+
+        // 計算預計退休年齡
+        document.getElementById('retire_age_display').innerText = (currentAge + workYears) + " 歲";
+
+        // 更新各處介面的工作年限文字標籤
+        const dynLabels = document.querySelectorAll('.dynamic-years');
+        dynLabels.forEach(el => el.innerText = workYears);
+        const dynTexts = document.querySelectorAll('.dynamic-years-text');
+        dynTexts.forEach(el => el.innerText = workYears + "年總計：");
 
         let firstYearSalary = incM * incY;
-        document.getElementById('inc_year1').innerText = firstYearSalary.toFixed(1) + " 萬";
 
-        // 30年保證加薪3% 複利計算迴圈
+        // 加薪 3% 複利動態迴圈計算 (跑互動拉桿的 workYears 年數)
         let totalIncome = 0;
         let currentYearSalary = firstYearSalary;
-        for (let year = 1; year <= 30; year++) {
+        for (let year = 1; year <= workYears; year++) {
             totalIncome += currentYearSalary;
-            currentYearSalary *= 1.03; // 每年加薪 3%
+            currentYearSalary *= 1.03; 
         }
         
-        // 將動態總收入四捨五入整數，用來完全取代原本的固定的 1998 萬
         income = Math.round(totalIncome);
         document.getElementById('inc_total_30').innerText = income.toLocaleString() + " 萬";
 
-        // 2. 以下為原本的各題目的花費滑桿連動邏輯 (完全保留)
+        // 2. 支出與花費連動邏輯（自動依據互動後的 workYears 年數計算變動）
         const q1 = parseFloat(document.getElementById('q1').value);
-        const t1 = q1 * 12 * 30;
+        const t1 = q1 * 12 * workYears; // 改依 workYears 計算
         document.getElementById('v1').innerText = q1 + " 萬";
         document.getElementById('y1').innerText = (q1 * 12).toFixed(1) + " 萬";
-        document.getElementById('t1').innerText = t1 + " 萬";
+        document.getElementById('t1').innerText = t1.toLocaleString() + " 萬";
 
         const q2b = parseInt(document.getElementById('q2_buy').value);
         const q2m = parseFloat(document.getElementById('q2_maint').value);
-        const t2b_3 = q2b * 3; 
-        const t2m = q2m * 12 * 30; 
+        
+        // 車輛花費動態估算：預設10年換一台。若工作25年算3台、15年算2台
+        let carCount = Math.max(1, Math.ceil(workYears / 10)); 
+        document.getElementById('car_title_display').innerText = workYears + "年共" + carCount + "台車花費：";
+        const t2b_3 = q2b * carCount; 
+        const t2m = q2m * 12 * workYears; // 改依 workYears 計算
         const t2_total = t2b_3 + t2m; 
         document.getElementById('v2_buy').innerText = q2b + " 萬";
         document.getElementById('v2_single').innerText = q2b + " 萬";
         document.getElementById('car30_display').innerText = t2b_3 + " 萬";
         document.getElementById('v2_maint').innerText = q2m + " 萬";
         document.getElementById('y2').innerText = (q2m * 12).toFixed(1) + " 萬";
-        document.getElementById('t2').innerText = Math.round(t2m) + " 萬";
+        document.getElementById('t2').innerText = Math.round(t2m).toLocaleString() + " 萬";
 
         const q3 = parseInt(document.getElementById('q3').value);
-        const t3 = q3 * 30;
+        const t3 = q3 * workYears; // 改依 workYears 計算
         document.getElementById('v3').innerText = q3 + " 萬";
         document.getElementById('y3').innerText = q3 + " 萬";
-        document.getElementById('t3').innerText = t3 + " 萬";
+        document.getElementById('t3').innerText = t3.toLocaleString() + " 萬";
 
         const q4 = parseInt(document.getElementById('q4').value);
         const t4 = q4 + 500; 
         document.getElementById('v4').innerText = q4 + " 萬";
         document.getElementById('v4_base').innerText = q4 + " 萬";
-        document.getElementById('t4').innerText = t4 + " 萬";
+        document.getElementById('t4').innerText = t4.toLocaleString() + " 萬";
 
         const q5 = parseFloat(document.getElementById('q5').value);
         const y5 = q5 * 12; 
-        const t5 = y5 * 20; 
+        const t5 = y5 * 20; // 養育固定抓20年基本不變
         document.getElementById('v5').innerText = q5 + " 萬";
         document.getElementById('y5').innerText = y5.toFixed(1) + " 萬";
-        document.getElementById('t5').innerText = Math.round(t5) + " 萬";
+        document.getElementById('t5').innerText = Math.round(t5).toLocaleString() + " 萬";
 
         const q6 = parseInt(document.getElementById('q6').value);
         document.getElementById('v6').innerText = q6 + " 萬";
-        document.getElementById('t6').innerText = q6 + " 萬";
+        document.getElementById('t6').innerText = q6.toLocaleString() + " 萬";
 
-        // 3. 餘額扣除邏輯 (此處的 income 已換成上方動態計算出來的30年複利總金額)
+        // 3. 實時動態剩餘預算扣減
         const b1 = income - t1;
         const b2 = b1 - t2_total;
         const b3 = b2 - t3;
@@ -381,19 +416,19 @@
         const n = document.getElementById('name').value; 
         document.getElementById('res_header').innerText = u + " / " + n;
         
-        // 總結頁的生涯總收入改為動態數值
+        document.getElementById('report_title_years').innerText = "項目明細 (工作" + workYears + "年)";
         document.getElementById('r_inc_total').innerText = income.toLocaleString() + " 萬";
 
-        const q1 = parseFloat(document.getElementById('q1').value) * 12 * 30;
-        const q2b_3 = parseInt(document.getElementById('q2_buy').value) * 3;
-        const q2m = parseFloat(document.getElementById('q2_maint').value) * 12 * 30;
+        const q1 = parseFloat(document.getElementById('q1').value) * 12 * workYears;
+        let carCount = Math.max(1, Math.ceil(workYears / 10));
+        const q2b_3 = parseInt(document.getElementById('q2_buy').value) * carCount;
+        const q2m = parseFloat(document.getElementById('q2_maint').value) * 12 * workYears;
         const q2_all = q2b_3 + q2m;
-        const q3 = parseInt(document.getElementById('q3').value) * 30;
+        const q3 = parseInt(document.getElementById('q3').value) * workYears;
         const q4 = parseInt(document.getElementById('q4').value) + 500;
         const q5 = (parseFloat(document.getElementById('q5').value) * 12) * 20;
         const q6 = parseInt(document.getElementById('q6').value);
         
-        // 最終財富餘額運算
         const fin = income - q1 - q2_all - q3 - q4 - q5 - q6;
         
         document.getElementById('r1').innerText = "- " + Math.round(q1).toLocaleString() + " 萬"; 
@@ -408,7 +443,6 @@
         rf.style.color = fin < 0 ? "#FF7675" : "#2ECC71";
     }
 
-    // 啟動時預先跑一次計算
     calculate();
 </script>
 </body>
