@@ -33,7 +33,7 @@
         .val-row-container { display: flex; justify-content: space-between; align-items: center; margin: 2px 0; }
         .val-display { color: var(--m-orange); font-size: 1.15rem; font-weight: bold; text-align: left; transition: transform 0.2s ease; }
         
-        /* ✨ 可愛文青動態小圖標基礎設定 */
+        /* 可愛文青動態小圖標基礎設定 */
         .cute-avatar { 
             font-size: 1.4rem; 
             display: inline-block; 
@@ -183,11 +183,11 @@
     </div>
 
     <div class="step" id="step1">
-        <div class="q-title">🏠（二）基本開銷</div>
+        <div class="q-title">🧺（二）基本開銷</div>
         <div class="script-box">賺錢就是要花的，對吧？我們來算算要花掉多少錢喔，首先是基本開銷，你覺得一個月要花多少呢？</div>
         <div class="val-row-container">
             <div class="val-display" id="v1" style="font-size:1.25rem;">3 萬</div>
-            <div class="cute-avatar" id="ani_q1">🏡</div>
+            <div class="cute-avatar" id="ani_q1">🧺</div>
         </div>
         <input type="range" id="q1" min="1" max="15" step="0.5" value="3" oninput="calculate(); triggerAnimate('ani_q1', this)">
         <div class="stat-card">
@@ -255,7 +255,7 @@
         <div class="script-box">你會不會希望買一間房，假設要花多少萬買房，利息加上一些費用支出也得再多支出500萬，扣掉這些，是不是已經不夠用了</div>
         <div class="val-row-container">
             <div class="val-display" id="v4" style="font-size:1.25rem;">1000 萬</div>
-            <div class="cute-avatar" id="ani_q4">🧱</div>
+            <div class="cute-avatar" id="ani_q4">🏠</div>
         </div>
         <input type="range" id="q4" min="0" max="4000" step="50" value="1000" oninput="calculate(); triggerAnimate('ani_q4', this)">
         <div class="stat-card">
@@ -306,7 +306,7 @@
     <div class="step" id="step7" style="justify-content: center; padding: 5px 15px;">
         <div id="res_header" style="text-align:center; margin-bottom:6px; font-weight:bold; color:var(--m-green); font-size:0.95rem;"></div>
         <div class="script-box" style="margin-bottom:8px; text-align:center; font-weight:bold; background:#FFF0F0; border-left:4px solid #C0392B; padding:6px; font-size:0.82rem; color: #7F231C;">
-            我們一輩子工作賺的錢，怎麼會夠用？不夠辦？
+            我們一輩子工作賺的錢，怎麼會夠用？不夠怎麼辦？
         </div>
         <div style="background:var(--m-green); color:white; border-radius:16px; padding:12px 16px; box-shadow:0 8px 20px rgba(107,142,35,0.2);">
             <div class="report-item" style="font-weight:bold; border-bottom:1.5px solid white; padding-bottom:4px;"><span id="report_title_years">項目明細 (工作30年)</span><span>預算金額</span></div>
@@ -328,29 +328,24 @@
     let currentStep = 0;
     let income = 1998; 
     let workYears = 30; 
-    let clearTimers = {}; // 快取各拉桿計時器物件
+    let clearTimers = {}; 
     const ALLOWED_UNITS = ['宏觀', '宏觀通訊處', '華山', '華山通訊處'];
 
-    // 🌟 全新進階版拉桿小動畫：拖曳時快樂擺動 + 依據設定值比例同步長大
     function triggerAnimate(avatarId, sliderEl) {
         const avatar = document.getElementById(avatarId);
         if(!avatar) return;
         
-        // 1. 動態計算目前的滑動進度百分比 (0.0 到 1.0)
         const min = parseFloat(sliderEl.min) || 0;
         const max = parseFloat(sliderEl.max) || 100;
         const val = parseFloat(sliderEl.value);
         const percent = (val - min) / (max - min || 1);
         
-        // 2. 轉換為動態縮放比例：基礎 1.0x，拉到滿格時可長大到 1.6x 
         const dynamicScale = 1.0 + (percent * 0.6);
         
-        // 3. 將計算出的比例傳遞給 CSS 變數，並添加 active 類別開啟快樂搖擺
         avatar.style.setProperty('--base-scale', dynamicScale);
         avatar.classList.add('active');
         avatar.style.transform = `scale(${dynamicScale})`;
 
-        // 4. 防抖設定：使用者手指離開或停止拖曳 0.3 秒後，優雅地停止搖擺，但維持長大後的體型
         if (clearTimers[avatarId]) clearTimeout(clearTimers[avatarId]);
         clearTimers[avatarId] = setTimeout(() => {
             avatar.classList.remove('active');
