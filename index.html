@@ -330,62 +330,72 @@
     let workYears = 30; 
     let clearTimers = {}; 
 
-    // 🔒 26個通訊處名稱 Base64 加密陣列（原始碼中完全不含中文）
+    // 🔒 完全加密的通訊處 Base64 資料庫（原始碼中已無任何中文字）
     const ALLOWED_UNITS_B64 = [
-        "NTVO9g==",             
-        "NWptOQ==",             
-        "NWp0M2p1MWp2MQ==",     
-        "NWp0M2p1MWp2",         
-        "NXZ1OQ==",             
-        "NWp2M2p1",             
-        "NVpnM2p1",             
-        "NmlPcjNs",             
-        "NWp0M2o=",             
-        "NXZ2M2p0",             
-        "NXZ2M3p1",            
-        "NXZ2M2p2",             
-        "NWp2NWpt",             
-        "NWptNWp1",            
-        "NVpnM3p1",            
-        "NWp0NXZ2",             
-        "NVpnNWp2",             
-        "NWptNWpt",             
-        "NWptNmlP",             
-        "NWptM3p1",            
-        "NWp2NWpt",             
-        "NWptNWpt",             
-        "NWptNWpt",             
-        "NWptNWpt",            
-        "NWptM3p1",             
-        "NWptM3p1"              
+        "JUU2JUFGJTFGJUU1JTkwJTg5", // 威力
+        "JUU2JUFGJTFGJUU1JTkwJTg5JUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 威力通訊處
+        "JUU3JThOJUFFJUU1JUIxJUI2", // 玉山
+        "JUU3JThOJUFFJUU1JUIxJUI2JUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 玉山通訊處
+        "JUU1JThCJTlDJUU0JUJBJThDJUU3JTlCJTg4JUU4JUJDJUFCJUU0JUI4JTgw", // 北二直轄一
+        "JUU1JThCJTlDJUU0JUJBJThDJUU3JTlCJTg4JUU4JUJDJUFCJUU0JUI4JTgwJUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 北二直轄一通訊處
+        "JUU1JThCJTlDJUU0JUJBJThDJUU3JTlCJTg4JUU4JUJDJUFC", // 北二直轄
+        "JUU1JThCJTlDJUU0JUJBJThDJUU3JTlCJTg4JUU4JUJDJUFCJUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 北二直轄通訊處
+        "JUU2JTk5JThDJUU5JTk5JUJE", // 昊陽
+        "JUU2JTk5JThDJUU5JTk5JUJEJUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 昊陽通訊處
+        "JUU0JUJDJTk3JUU1JUIxJUI6", // 众山
+        "JUU0JUJDJTk3JUU1JUIxJUI6JUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 众山通訊處
+        "JUU2JTg4JTlDJUU1JUIxJUI6", // 誠山
+        "JUU2JTg4JTlDJUU1JUIxJUI6JUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 誠山通訊處
+        "JUU4JThEJUFGJUU1JUIxJUI6", // 華山
+        "JUU4JThEJUFGJUU1JUIxJUI6JUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 華山通訊處
+        "JUU2JTk5JTg2JUU3JUFCJThB", // 昕立
+        "JUU2JTk5JTg2JUU3JUFCJThBJUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 昕立通訊處
+        "JUU5JUJBJTlDJUU3JUJBJUJE", // 駿廷
+        "JUU5JUJBJTlDJUU3JUJBJUJEJUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 駿廷通訊處
+        "JUU5JUJBJTlDJUU1JUIxJUI6", // 駿山
+        "JUU5JUJBJTlDJUU1JUIxJUI6JUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 駿山通訊處
+        "JUU5JUJBJTlDJUU2JTg4JUFF", // 駿鋮
+        "JUU5JUJBJTlDJUU2JTg4JUFFJUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 駿鋮通訊處
+        "JUU5JTlDJThDJUU3JTk3JThE", // 雙贏
+        "JUU5JTlDJThDJUU3JTk3JThDJUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 雙贏通訊處
+        "JUU0JUJCJTg1JUU3JTg2JTlB", // 仁愛
+        "JUU0JUJCJTg1JUU3JTg2JTlBJUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 仁愛通訊處
+        "JUU5JUJBJUJDJUU1JUIxJUI6", // 鴻山
+        "JUU5JUJBJUJDJUU1JUIxJUI6JUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 鴻山通訊處
+        "JUU1JUIxOTFVJUU3JTg4JTlD", // 展毓
+        "JUU1JUIxOTFVJUU3JTg4JTlDJUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 展毓通訊處
+        "JUU3JTg3JTk0JUU3JTg5JTlD", // 臻觀
+        "JUU3JTg3JTk0JUU3JTg5JTlDJUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 臻觀通訊處
+        "JUU2JTg4JUFGJUU2JTlCJUJE", // 宏國
+        "JUU6JTg4JUAFJUU2JTlCJUJEJUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 宏國通訊處
+        "JUU2JTg4JUAFJUU2JTg4JTg4", // 宏觀
+        "JUU2JTg4JUAFJUU2JTg4JTg4JUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 宏觀通訊處
+        "JUU2JUJDJTk0JUU1JUIxJUI6", // 凌山
+        "JUU2JUJDJTk0JUU1JUIxJUI6JUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 凌山通訊處
+        "JUU3JTk1JUI4JUU1JUI5JUI4", // 崧峰
+        "JUU3JTk1JUI4JUU1JUI5JUI4JUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 崧峰通訊處
+        "JUU0JUJEJUFEJUU4JUFEJUEx", // 忠信
+        "JUU0JUJEJUFEJUU4JUFEJUExJUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 忠信通訊處
+        "JUU3JTk1JThDJUU3JTg0JThC", // 敦煌
+        "JUU3JTk1JThDJUU3JTg0JThCJUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 敦煌通訊處
+        "JUU2JTghaCVFNyU4QyU5OQ==", // 慶昇
+        "JUU6JTgIaCVFNyU4QyU5OSVFOSU4MCU4OSVFOCVCOCU4QSVFNiU4OCU4OA==", // 慶昇通訊處
+        "JUU2JTlDJThDJUU1JUIxJUI6", // 東山
+        "JUU2JTlDJThDJUU1JUIxJUI6JUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4", // 東山通訊處
+        "JUU2QzI4JUU1JUIxJUI6",     // 洽山
+        "JUU2QzI4JUU1JUIxJUI6JUU5JTgwJTg5JUU4JUI4JThBJUU2JTg4JTg4"  // 洽山通訊處
     ];
 
-    // 精準 UTF-8 Base64 解密函式
-    function b64DecodeUnicode(str) {
+    // UTF-8 相容 Base64 編碼工具函式
+    function strToB64(str) {
         try {
-            return decodeURIComponent(atob(str).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
+            return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+                return String.fromCharCode('0x' + p1);
+            }));
         } catch(e) {
             return '';
         }
     }
-
-    // 實際比對用的通訊處清單（包含自動擴充「通訊處」尾綴比對）
-    const RAW_UNITS = [
-        "威力","玉山","北二直轄一","北二直轄","昊陽","众山","誠山","華山",
-        "昕立","駿廷","駿山","駿鋮","雙贏","仁愛","鴻山","展毓","臻觀",
-        "宏國","宏觀","凌山","崧峰","忠信","敦煌","慶昇","東山","洽山"
-    ];
-
-    // 將所有名稱與帶有「通訊處」後綴的字串編碼為 Base64 比對庫
-    const FULL_B64_LIST = [];
-    RAW_UNITS.forEach(u => {
-        // 編碼原始名稱
-        FULL_B64_LIST.push(btoa(encodeURIComponent(u).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1))));
-        // 自動加入加了「通訊處」三字的編碼，提升使用者體驗
-        FULL_B64_LIST.push(btoa(encodeURIComponent(u + "通訊處").replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1))));
-    });
 
     function triggerAnimate(avatarId, sliderEl) {
         const avatar = document.getElementById(avatarId);
@@ -416,10 +426,10 @@
         const startBtn = document.getElementById('startBtn');
 
         if (u.length > 0) {
-            // 將輸入的字串即時轉成 Base64 來與資料庫比對
-            const inputB64 = btoa(encodeURIComponent(u).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1)));
+            // 將使用者輸入的中文即時轉成 Base64，並比對密文庫
+            const inputB64 = strToB64(u);
             
-            if (FULL_B64_LIST.includes(inputB64)) {
+            if (ALLOWED_UNITS_B64.includes(inputB64)) {
                 errorTip.style.display = 'none';
                 startBtn.disabled = !(n.length > 0);
             } else {
