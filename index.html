@@ -652,45 +652,85 @@
 </div>
 
 <script>
-    let currentStep = 0;
+        let currentStep = 0;
     let income = 1998; 
     let workYears = 30; 
     let clearTimers = {}; 
 
-    // 🔒 純 Base64 密文庫（完全無中文註解）
-    const ALLOWED_UNITS_B64 = [
-        "5Y2P6KeA", "5Y2P6KeA6YCa6KiK6JZn",
-        "546J5bGx", "546J5bGx6YCa6KiK6JZn",
-        "5YyX5LqM55u06LSp5pCA", "5YyX5LqM55u06LSp5pCA6YCa6KiK6JZn",
-        "5YyX5LqM55u06LSp", "5YyX5LqM55u06LSp6YCa6KiK6JZn",
-        "5piC6Zm9", "5piC6Zm96YCa6KiK6JZn",
-        "5LyX5bGx", "5LyX5bGx6YCa6KiK6JZn",
-        "6KqA5bGx", "6KqA5bGx6YCa6KiK6JZn",
-        "6IPr5bGx", "6IPr5bGx6YCa6KiK6JZn",
-        "5pic44GL", "5pic44GL6YCa6KiK6JZn",
-        "6aq_5bu3", "6aq_5bu36YCa6KiK6JZn",
-        "6aq_5bGx", "6aq_5bGx6YCa6KiK6JZn",
-        "6aq_6Iag", "6aq_6Iag6YCa6KiK6JZn",
-        "6ZuZ6Yme", "6ZuZ6Yme6YCa6KiK6JZn",
-        "4LuB44GQ", "4LuB44GQ6YCa6KiK6JZn",
-        "6LO75bGx", "6LO75bGx6YCa6KiK6JZn",
-        "5bGV6YS3", "5bGV6YS36YCa6KiK6JZn",
-        "6IOH6KeA", "6IOH6KeA6YCa6KiK6JZn",
-        "5aC_6Iex", "5aC_6Iex6YCa6KiK6JZn",
-        "5aC_6KeA", "5aC_6KeA6YCa6KiK6JZn",
-        "5YeM5bGx", "5YeM5bGx6YCa6KiK6JZn",
-        "5bT35baa", "5bT35baa6YCa6KiK6JZn",
-        "4Lmg44GI", "4Lmg44GI6YCa6KiK6JZn",
-        "5ppu5LqM", "5ppu5LqM6YCa6KiK6JZn",
-        "5o225piH", "5o225piH6YCa6KiK6JZn",
-        "5p2x5bGx", "5p2x5bGx6YCa6KiK6JZn",
-        "4Lu95bGx", "4Lu95bGx6YCa6KiK6JZn"
+    const ALLOWED_UNITS_HASH = [
+        1813083, 622340578,
+        6859615, 2038753230,
+        -411516086, -1193630605,
+        1071427510, 1695420377,
+        2249767, 725458142,
+        6776961, 2026859616,
+        7182283, 2085181954,
+        6998149, 2058692132,
+        2101039, 679122390,
+        2332617, 751336824,
+        2332159, 751268398,
+        2333684, 751492061,
+        2358991, 755186630,
+        1816573, 622849076,
+        2369689, 756730992,
+        2029759, 668826726,
+        2100868, 679097445,
+        1898744, 634844961,
+        1898751, 634845984,
+        1929427, 639294522,
+        2089405, 677437892,
+        1879796, 632078837,
+        2096739, 678494634,
+        2099716, 678929253,
+        1881855, 632379430,
+        2038755, 670121178
     ];
 
-    // UTF-8 相容 Base64 編碼工具
-    function utf8ToB64(str) {
-        return btoa(unescape(encodeURIComponent(str)));
+    function getHash(str) {
+        let hash = 5381;
+        for (let i = 0; i < str.length; i++) {
+            hash = ((hash << 5) + hash) + str.charCodeAt(i);
+            hash = hash & hash;
+        }
+        return hash;
     }
+
+    function checkStart() {
+        const unitEl = document.getElementById('unit');
+        const nameEl = document.getElementById('name');
+        const errorTip = document.getElementById('unitError');
+        const startBtn = document.getElementById('startBtn');
+
+        if (!unitEl || !nameEl || !startBtn) return;
+
+        const u = unitEl.value.trim();
+        const n = nameEl.value.trim();
+
+        if (u.length > 0) {
+            const inputHash = getHash(u);
+            
+            if (ALLOWED_UNITS_HASH.includes(inputHash)) {
+                if (errorTip) errorTip.style.display = 'none';
+                startBtn.disabled = !(n.length > 0);
+            } else {
+                if (errorTip) errorTip.style.display = 'block';
+                startBtn.disabled = true;
+            }
+        } else {
+            if (errorTip) errorTip.style.display = 'none';
+            startBtn.disabled = true;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const unitEl = document.getElementById('unit');
+        const nameEl = document.getElementById('name');
+
+        if (unitEl) unitEl.addEventListener('input', checkStart);
+        if (nameEl) nameEl.addEventListener('input', checkStart);
+        
+        checkStart();
+    });
 
     function triggerAnimate(avatarId, sliderEl) {
         const avatar = document.getElementById(avatarId);
@@ -712,28 +752,6 @@
             avatar.classList.remove('active');
             avatar.style.transform = `scale(${dynamicScale})`; 
         }, 300);
-    }
-
-    function checkStart() {
-        const u = document.getElementById('unit').value.trim();
-        const n = document.getElementById('name').value.trim();
-        const errorTip = document.getElementById('unitError');
-        const startBtn = document.getElementById('startBtn');
-
-        if (u.length > 0) {
-            const inputB64 = utf8ToB64(u);
-            
-            if (ALLOWED_UNITS_B64.includes(inputB64)) {
-                errorTip.style.display = 'none';
-                startBtn.disabled = !(n.length > 0);
-            } else {
-                errorTip.style.display = 'block';
-                startBtn.disabled = true;
-            }
-        } else {
-            errorTip.style.display = 'none';
-            startBtn.disabled = true;
-        }
     }
 
     function nextStep(s) {
