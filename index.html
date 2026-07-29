@@ -652,7 +652,7 @@
 </div>
 
 <script>
-        let currentStep = 0;
+            let currentStep = 0;
     let income = 1998; 
     let workYears = 30; 
     let clearTimers = {}; 
@@ -697,38 +697,73 @@
 
     function checkStart() {
         const unitEl = document.getElementById('unit');
-        const nameEl = document.getElementById('name');
         const errorTip = document.getElementById('unitError');
         const startBtn = document.getElementById('startBtn');
 
-        if (!unitEl || !nameEl || !startBtn) return;
+        // 強制把按鈕的 disabled 屬性拿掉，允許點擊
+        if (startBtn) {
+            startBtn.removeAttribute('disabled');
+            startBtn.disabled = false;
+            startBtn.style.cursor = 'pointer';
+        }
 
+        if (!unitEl) return;
         const u = unitEl.value.trim();
-        const n = nameEl.value.trim();
 
         if (u.length > 0) {
             const inputHash = getHash(u);
-            
             if (ALLOWED_UNITS_HASH.includes(inputHash)) {
                 if (errorTip) errorTip.style.display = 'none';
-                startBtn.disabled = !(n.length > 0);
             } else {
                 if (errorTip) errorTip.style.display = 'block';
-                startBtn.disabled = true;
             }
         } else {
             if (errorTip) errorTip.style.display = 'none';
-            startBtn.disabled = true;
         }
+    }
+
+    // 🚀 點擊「開始試算 Go!」時執行的入口函式
+    function startCalculation() {
+        const unitEl = document.getElementById('unit');
+        const nameEl = document.getElementById('name');
+        const errorTip = document.getElementById('unitError');
+
+        const u = unitEl ? unitEl.value.trim() : '';
+        const n = nameEl ? nameEl.value.trim() : '';
+
+        if (!u) {
+            alert("請輸入通訊處！");
+            return;
+        }
+        if (!n) {
+            alert("請輸入姓名！");
+            return;
+        }
+
+        const inputHash = getHash(u);
+        if (!ALLOWED_UNITS_HASH.includes(inputHash)) {
+            if (errorTip) errorTip.style.display = 'block';
+            alert("該通訊處暫無使用權限！");
+            return;
+        }
+
+        // 通過驗證，強制進入下一步 Step 1
+        nextStep(1);
     }
 
     document.addEventListener("DOMContentLoaded", function() {
         const unitEl = document.getElementById('unit');
         const nameEl = document.getElementById('name');
+        const startBtn = document.getElementById('startBtn');
 
         if (unitEl) unitEl.addEventListener('input', checkStart);
         if (nameEl) nameEl.addEventListener('input', checkStart);
         
+        if (startBtn) {
+            // 綁定點擊事件 directly
+            startBtn.onclick = startCalculation;
+        }
+
         checkStart();
     });
 
@@ -755,16 +790,24 @@
     }
 
     function nextStep(s) {
-        document.getElementById('step' + currentStep).classList.remove('active');
+        const currentEl = document.getElementById('step' + currentStep);
+        const nextEl = document.getElementById('step' + s);
+
+        if (currentEl) currentEl.classList.remove('active');
+        if (nextEl) nextEl.classList.add('active');
+
         currentStep = s;
-        document.getElementById('step' + s).classList.add('active');
         if(s === 7) finalize();
     }
 
     function prevStep(s) {
-        document.getElementById('step' + currentStep).classList.remove('active');
+        const currentEl = document.getElementById('step' + currentStep);
+        const prevEl = document.getElementById('step' + s);
+
+        if (currentEl) currentEl.classList.remove('active');
+        if (prevEl) prevEl.classList.add('active');
+
         currentStep = s;
-        document.getElementById('step' + s).classList.add('active');
     }
 
     function calculate() {
