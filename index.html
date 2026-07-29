@@ -652,11 +652,22 @@
 </div>
 
 <script>
-             let currentStep = 0;
+    <style>
+    /* 強制將所有按鈕解鎖，滑鼠游標改為手指，徹底移除 🚫 符號 */
+    button, [id*="start"], .btn, button[disabled] {
+        pointer-events: auto !important;
+        cursor: pointer !important;
+        opacity: 1 !important;
+    }
+</style>
+
+<script>
+    let currentStep = 0;
     let income = 1998; 
     let workYears = 30; 
     let clearTimers = {}; 
 
+    // 通訊處 Unicode 比對清單
     const ALLOWED_UNITS = [
         "\u5a01\u529b", "\u5a01\u529b\u901a\u8a0a\u8655",
         "\u7389\u5c71", "\u7389\u5c71\u901a\u8a0a\u8655",
@@ -686,69 +697,64 @@
         "\u6d3d\u5c71", "\u6d3d\u5c71\u901a\u8a0a\u8655"
     ];
 
-    function checkStart() {
-        const unitEl = document.getElementById('unit');
-        const nameEl = document.getElementById('name');
-        const errorTip = document.getElementById('unitError');
-        const startBtn = document.getElementById('startBtn');
+    function forceUnlock() {
+        const inputs = document.querySelectorAll('input[type="text"], input:not([type])');
+        const btns = document.querySelectorAll('button, .btn, [id*="start"]');
 
-        if (!unitEl || !nameEl || !startBtn) return;
+        let unitVal = "";
+        let nameVal = "";
 
-        const u = unitEl.value.trim();
-        const n = nameEl.value.trim();
-
-        if (u.length > 0) {
-            if (ALLOWED_UNITS.includes(u)) {
-                if (errorTip) errorTip.style.display = 'none';
-                
-                if (n.length > 0) {
-                    startBtn.disabled = false;
-                    startBtn.removeAttribute('disabled');
-                    startBtn.style.pointerEvents = 'auto';
-                    startBtn.style.opacity = '1';
-                    startBtn.style.cursor = 'pointer';
-                } else {
-                    startBtn.disabled = true;
-                }
-            } else {
-                if (errorTip) errorTip.style.display = 'block';
-                startBtn.disabled = true;
-            }
+        if (inputs.length >= 2) {
+            unitVal = inputs[0].value.trim();
+            nameVal = inputs[1].value.trim();
         } else {
-            if (errorTip) errorTip.style.display = 'none';
-            startBtn.disabled = true;
+            const u = document.getElementById('unit');
+            const n = document.getElementById('name');
+            if (u) unitVal = u.value.trim();
+            if (n) nameVal = n.value.trim();
         }
+
+        const isValidUnit = ALLOWED_UNITS.includes(unitVal);
+        const hasName = nameVal.length > 0;
+
+        btns.forEach(btn => {
+            if (isValidUnit && hasName) {
+                btn.disabled = false;
+                btn.removeAttribute('disabled');
+                btn.style.setProperty('pointer-events', 'auto', 'important');
+                btn.style.setProperty('opacity', '1', 'important');
+                btn.style.setProperty('cursor', 'pointer', 'important');
+            } else {
+                // 若輸入不完全則保持鎖定
+                btn.disabled = true;
+            }
+        });
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-        const unitEl = document.getElementById('unit');
-        const nameEl = document.getElementById('name');
-        const startBtn = document.getElementById('startBtn');
+        // 全域動態監聽所有輸入框變更
+        document.addEventListener('input', forceUnlock);
+        document.addEventListener('keyup', forceUnlock);
+        document.addEventListener('change', forceUnlock);
 
-        if (unitEl) {
-            unitEl.addEventListener('input', checkStart);
-            unitEl.addEventListener('keyup', checkStart);
-        }
-        if (nameEl) {
-            nameEl.addEventListener('input', checkStart);
-            nameEl.addEventListener('keyup', checkStart);
-        }
+        // 為所有按鈕綁定強制跳轉
+        const btns = document.querySelectorAll('button, .btn, [id*="start"]');
+        btns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const inputs = document.querySelectorAll('input[type="text"], input:not([type])');
+                let unitVal = inputs.length >= 1 ? inputs[0].value.trim() : "";
+                let nameVal = inputs.length >= 2 ? inputs[1].value.trim() : "";
 
-        if (startBtn) {
-            startBtn.addEventListener('click', function(e) {
-                const u = unitEl ? unitEl.value.trim() : '';
-                const n = nameEl ? nameEl.value.trim() : '';
-
-                if (ALLOWED_UNITS.includes(u) && n.length > 0) {
+                if (ALLOWED_UNITS.includes(unitVal) && nameVal.length > 0) {
                     nextStep(1);
                 } else {
                     e.preventDefault();
-                    checkStart();
+                    alert("\u8acb\u8f38\u5165\u6b63\u780a\u7684\u901a\u8a0a\u8655\u8207\u59d3\u540d\uff01"); // Unicode 提示：請輸入正確的通訊處與姓名！
                 }
             });
-        }
+        });
 
-        checkStart();
+        forceUnlock();
     });
 
     function triggerAnimate(avatarId, sliderEl) {
@@ -891,8 +897,10 @@
     }
 
     function finalize() {
-        const u = document.getElementById('unit').value; 
-        const n = document.getElementById('name').value; 
+        const inputs = document.querySelectorAll('input[type="text"], input:not([type])');
+        let u = inputs.length >= 1 ? inputs[0].value : "";
+        let n = inputs.length >= 2 ? inputs[1].value : "";
+        
         document.getElementById('res_header').innerText = "\u1f33f " + u + " \uff5c " + n;
         document.getElementById('report_title_years').innerText = "\u9805\u76ee\u660e\u7d30 (\u517c\u4f5c" + workYears + "\u5e74)";
         document.getElementById('r_inc_total').innerText = income.toLocaleString() + " \u842c";
@@ -922,7 +930,6 @@
     }
 
     calculate();
-
       
 </script>
 </body>
