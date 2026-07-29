@@ -652,103 +652,72 @@
 </div>
 
 <script>
-            let currentStep = 0;
+             let currentStep = 0;
     let income = 1998; 
     let workYears = 30; 
     let clearTimers = {}; 
 
-    const ALLOWED_UNITS_HASH = [
-        1813083, 622340578,
-        6859615, 2038753230,
-        -411516086, -1193630605,
-        1071427510, 1695420377,
-        2249767, 725458142,
-        6776961, 2026859616,
-        7182283, 2085181954,
-        6998149, 2058692132,
-        2101039, 679122390,
-        2332617, 751336824,
-        2332159, 751268398,
-        2333684, 751492061,
-        2358991, 755186630,
-        1816573, 622849076,
-        2369689, 756730992,
-        2029759, 668826726,
-        2100868, 679097445,
-        1898744, 634844961,
-        1898751, 634845984,
-        1929427, 639294522,
-        2089405, 677437892,
-        1879796, 632078837,
-        2096739, 678494634,
-        2099716, 678929253,
-        1881855, 632379430,
-        2038755, 670121178
+    const ALLOWED_UNITS = [
+        "\u5a01\u529b", "\u5a01\u529b\u901a\u8a0a\u8655",
+        "\u7389\u5c71", "\u7389\u5c71\u901a\u8a0a\u8655",
+        "\u5317\u4c8c\u76f4\u8f44\u4e00", "\u5317\u4c8c\u76f4\u8f44\u4e00\u901a\u8a0a\u8655",
+        "\u5317\u4c8c\u76f4\u8f44", "\u5317\u4c8c\u76f4\u8f44\u901a\u8a0a\u8655",
+        "\u660a\u967d", "\u660a\u967d\u901a\u8a0a\u8655",
+        "\u4f17\u5c71", "\u4f17\u5c71\u901a\u8a0a\u8655",
+        "\u8aa0\u5c71", "\u8aa0\u5c71\u901a\u8a0a\u8655",
+        "\u83ef\u5c71", "\u83ef\u5c71\u901a\u8a0a\u8655",
+        "\u6615\u7acb", "\u6615\u7acb\u901a\u8a0a\u8655",
+        "\u9a7f\u5ef7", "\u9a7f\u5ef7\u901a\u8a0a\u8655",
+        "\u9a7f\u5c71", "\u9a7f\u5c71\u901a\u8a0a\u8655",
+        "\u9a7f\u94e6", "\u9a7f\u94e6\u901a\u8a0a\u8655",
+        "\u96d9\u8d04", "\u96d9\u8d04\u901a\u8a0a\u8655",
+        "\u4ec1\u611b", "\u4ec1\u611b\u901a\u8a0a\u8655",
+        "\u92f1\u5c71", "\u92f1\u5c71\u901a\u8a0a\u8655",
+        "\u5c55\u6bd3", "\u5c55\u6bd3\u901a\u8a0a\u8655",
+        "\u81fb\u89c2", "\u81fb\u89c2\u901a\u8a0a\u8655",
+        "\u5f8f\u570b", "\u5f8f\u570b\u901a\u8a0a\u8655",
+        "\u5f8f\u89c2", "\u5f8f\u89c2\u901a\u8a0a\u8655",
+        "\u51cc\u5c71", "\u51cc\u5c71\u901a\u8a0a\u8655",
+        "\u5d20\u5cf0", "\u5d20\u5cf0\u901a\u8a0a\u8655",
+        "\u5ed0\u4fe1", "\u5ed0\u4fe1\u901a\u8a0a\u8655",
+        "\u6566\u714c", "\u6566\u714c\u901a\u8a0a\u8655",
+        "\u6176\u6607", "\u6176\u6607\u901a\u8a0a\u8655",
+        "\u6771\u5c71", "\u6771\u5c71\u901a\u8a0a\u8655",
+        "\u6d3d\u5c71", "\u6d3d\u5c71\u901a\u8a0a\u8655"
     ];
-
-    function getHash(str) {
-        let hash = 5381;
-        for (let i = 0; i < str.length; i++) {
-            hash = ((hash << 5) + hash) + str.charCodeAt(i);
-            hash = hash & hash;
-        }
-        return hash;
-    }
 
     function checkStart() {
         const unitEl = document.getElementById('unit');
+        const nameEl = document.getElementById('name');
         const errorTip = document.getElementById('unitError');
         const startBtn = document.getElementById('startBtn');
 
-        // 強制把按鈕的 disabled 屬性拿掉，允許點擊
-        if (startBtn) {
-            startBtn.removeAttribute('disabled');
-            startBtn.disabled = false;
-            startBtn.style.cursor = 'pointer';
-        }
+        if (!unitEl || !nameEl || !startBtn) return;
 
-        if (!unitEl) return;
         const u = unitEl.value.trim();
+        const n = nameEl.value.trim();
 
         if (u.length > 0) {
-            const inputHash = getHash(u);
-            if (ALLOWED_UNITS_HASH.includes(inputHash)) {
+            if (ALLOWED_UNITS.includes(u)) {
                 if (errorTip) errorTip.style.display = 'none';
+                
+                if (n.length > 0) {
+                    startBtn.disabled = false;
+                    startBtn.removeAttribute('disabled');
+                    startBtn.style.pointerEvents = 'auto';
+                    startBtn.style.opacity = '1';
+                    startBtn.style.cursor = 'pointer';
+                } else {
+                    startBtn.disabled = true;
+                }
             } else {
                 if (errorTip) errorTip.style.display = 'block';
+                startBtn.disabled = true;
             }
         } else {
             if (errorTip) errorTip.style.display = 'none';
+            startBtn.disabled = true;
         }
-    }
-
-    // 🚀 點擊「開始試算 Go!」時執行的入口函式
-    function startCalculation() {
-        const unitEl = document.getElementById('unit');
-        const nameEl = document.getElementById('name');
-        const errorTip = document.getElementById('unitError');
-
-        const u = unitEl ? unitEl.value.trim() : '';
-        const n = nameEl ? nameEl.value.trim() : '';
-
-        if (!u) {
-            alert("請輸入通訊處！");
-            return;
-        }
-        if (!n) {
-            alert("請輸入姓名！");
-            return;
-        }
-
-        const inputHash = getHash(u);
-        if (!ALLOWED_UNITS_HASH.includes(inputHash)) {
-            if (errorTip) errorTip.style.display = 'block';
-            alert("該通訊處暫無使用權限！");
-            return;
-        }
-
-        // 通過驗證，強制進入下一步 Step 1
-        nextStep(1);
     }
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -756,12 +725,27 @@
         const nameEl = document.getElementById('name');
         const startBtn = document.getElementById('startBtn');
 
-        if (unitEl) unitEl.addEventListener('input', checkStart);
-        if (nameEl) nameEl.addEventListener('input', checkStart);
-        
+        if (unitEl) {
+            unitEl.addEventListener('input', checkStart);
+            unitEl.addEventListener('keyup', checkStart);
+        }
+        if (nameEl) {
+            nameEl.addEventListener('input', checkStart);
+            nameEl.addEventListener('keyup', checkStart);
+        }
+
         if (startBtn) {
-            // 綁定點擊事件 directly
-            startBtn.onclick = startCalculation;
+            startBtn.addEventListener('click', function(e) {
+                const u = unitEl ? unitEl.value.trim() : '';
+                const n = nameEl ? nameEl.value.trim() : '';
+
+                if (ALLOWED_UNITS.includes(u) && n.length > 0) {
+                    nextStep(1);
+                } else {
+                    e.preventDefault();
+                    checkStart();
+                }
+            });
         }
 
         checkStart();
@@ -816,17 +800,17 @@
         const currentAge = parseInt(document.getElementById('q_age').value);
         workYears = parseInt(document.getElementById('q_work_years').value);
 
-        document.getElementById('v_inc_m').innerText = incM + " 萬";
-        document.getElementById('v_inc_y').innerText = incY + " 個月";
-        document.getElementById('v_age').innerText = currentAge + " 歲";
-        document.getElementById('v_work_years').innerText = workYears + " 年";
+        document.getElementById('v_inc_m').innerText = incM + " \u842c";
+        document.getElementById('v_inc_y').innerText = incY + " \u500b\u6708";
+        document.getElementById('v_age').innerText = currentAge + " \u6b72";
+        document.getElementById('v_work_years').innerText = workYears + " \u5e74";
 
-        document.getElementById('retire_age_display').innerText = (currentAge + workYears) + " 歲";
+        document.getElementById('retire_age_display').innerText = (currentAge + workYears) + " \u6b72";
 
         const dynLabels = document.querySelectorAll('.dynamic-years');
         dynLabels.forEach(el => el.innerText = workYears);
         const dynTexts = document.querySelectorAll('.dynamic-years-text');
-        dynTexts.forEach(el => el.innerText = workYears + "年總計：");
+        dynTexts.forEach(el => el.innerText = workYears + "\u5e74\u7e3d\u8a08\uff1a");
 
         let firstYearSalary = incM * incY;
         let totalIncome = 0;
@@ -837,51 +821,51 @@
         }
         
         income = Math.round(totalIncome);
-        document.getElementById('inc_total_30').innerText = income.toLocaleString() + " 萬";
+        document.getElementById('inc_total_30').innerText = income.toLocaleString() + " \u842c";
 
         const q1 = parseFloat(document.getElementById('q1').value);
         const t1 = q1 * 12 * workYears; 
-        document.getElementById('v1').innerText = q1 + " 萬";
-        document.getElementById('y1').innerText = (q1 * 12).toFixed(1) + " 萬";
-        document.getElementById('t1').innerText = t1.toLocaleString() + " 萬";
+        document.getElementById('v1').innerText = q1 + " \u842c";
+        document.getElementById('y1').innerText = (q1 * 12).toFixed(1) + " \u842c";
+        document.getElementById('t1').innerText = t1.toLocaleString() + " \u842c";
 
         const q2b = parseInt(document.getElementById('q2_buy').value);
         const q2m = parseFloat(document.getElementById('q2_maint').value);
         
         let carCount = Math.max(1, Math.ceil(workYears / 10)); 
-        document.getElementById('car_title_display').innerText = workYears + "年共" + carCount + "台車花費：";
+        document.getElementById('car_title_display').innerText = workYears + "\u5e74\u5171" + carCount + "\u53f0\u8005\u82b1\u8cbb\uff1a";
         const t2b_3 = q2b * carCount; 
         const t2m = q2m * 12 * workYears; 
         const t2_total = t2b_3 + t2m; 
-        document.getElementById('v2_buy').innerText = q2b + " 萬";
-        document.getElementById('v2_single').innerText = q2b + " 萬";
-        document.getElementById('car30_display').innerText = t2b_3 + " 萬";
-        document.getElementById('v2_maint').innerText = q2m + " 萬";
-        document.getElementById('y2').innerText = (q2m * 12).toFixed(1) + " 萬";
-        document.getElementById('t2').innerText = Math.round(t2m).toLocaleString() + " 萬";
+        document.getElementById('v2_buy').innerText = q2b + " \u842c";
+        document.getElementById('v2_single').innerText = q2b + " \u842c";
+        document.getElementById('car30_display').innerText = t2b_3 + " \u842c";
+        document.getElementById('v2_maint').innerText = q2m + " \u842c";
+        document.getElementById('y2').innerText = (q2m * 12).toFixed(1) + " \u842c";
+        document.getElementById('t2').innerText = Math.round(t2m).toLocaleString() + " \u842c";
 
         const q3 = parseInt(document.getElementById('q3').value);
         const t3 = q3 * workYears; 
-        document.getElementById('v3').innerText = q3 + " 萬";
-        document.getElementById('y3').innerText = q3 + " 萬";
-        document.getElementById('t3').innerText = t3.toLocaleString() + " 萬";
+        document.getElementById('v3').innerText = q3 + " \u842c";
+        document.getElementById('y3').innerText = q3 + " \u842c";
+        document.getElementById('t3').innerText = t3.toLocaleString() + " \u842c";
 
         const q4 = parseInt(document.getElementById('q4').value);
         const t4 = q4 + 500; 
-        document.getElementById('v4').innerText = q4 + " 萬";
-        document.getElementById('v4_base').innerText = q4 + " 萬";
-        document.getElementById('t4').innerText = t4.toLocaleString() + " 萬";
+        document.getElementById('v4').innerText = q4 + " \u842c";
+        document.getElementById('v4_base').innerText = q4 + " \u842c";
+        document.getElementById('t4').innerText = t4.toLocaleString() + " \u842c";
 
         const q5 = parseFloat(document.getElementById('q5').value);
         const y5 = q5 * 12; 
         const t5 = y5 * 20; 
-        document.getElementById('v5').innerText = q5 + " 萬";
-        document.getElementById('y5').innerText = y5.toFixed(1) + " 萬";
-        document.getElementById('t5').innerText = Math.round(t5).toLocaleString() + " 萬";
+        document.getElementById('v5').innerText = q5 + " \u842c";
+        document.getElementById('y5').innerText = y5.toFixed(1) + " \u842c";
+        document.getElementById('t5').innerText = Math.round(t5).toLocaleString() + " \u842c";
 
         const q6 = parseInt(document.getElementById('q6').value);
-        document.getElementById('v6').innerText = q6 + " 萬";
-        document.getElementById('t6').innerText = q6.toLocaleString() + " 萬";
+        document.getElementById('v6').innerText = q6 + " \u842c";
+        document.getElementById('t6').innerText = q6.toLocaleString() + " \u842c";
 
         const b1 = income - t1;
         const b2 = b1 - t2_total;
@@ -909,9 +893,9 @@
     function finalize() {
         const u = document.getElementById('unit').value; 
         const n = document.getElementById('name').value; 
-        document.getElementById('res_header').innerText = "🌿 " + u + " ｜ " + n;
-        document.getElementById('report_title_years').innerText = "項目明細 (工作" + workYears + "年)";
-        document.getElementById('r_inc_total').innerText = income.toLocaleString() + " 萬";
+        document.getElementById('res_header').innerText = "\u1f33f " + u + " \uff5c " + n;
+        document.getElementById('report_title_years').innerText = "\u9805\u76ee\u660e\u7d30 (\u517c\u4f5c" + workYears + "\u5e74)";
+        document.getElementById('r_inc_total').innerText = income.toLocaleString() + " \u842c";
 
         const q1 = parseFloat(document.getElementById('q1').value) * 12 * workYears;
         let carCount = Math.max(1, Math.ceil(workYears / 10));
@@ -925,20 +909,21 @@
         
         const fin = income - q1 - q2_all - q3 - q4 - q5 - q6;
         
-        document.getElementById('r1').innerText = "- " + Math.round(q1).toLocaleString() + " 萬"; 
-        document.getElementById('r2').innerText = "- " + Math.round(q2_all).toLocaleString() + " 萬"; 
-        document.getElementById('r3').innerText = "- " + q3.toLocaleString() + " 萬"; 
-        document.getElementById('r4').innerText = "- " + q4.toLocaleString() + " 萬"; 
-        document.getElementById('r5').innerText = "- " + Math.round(q5).toLocaleString() + " 萬"; 
-        document.getElementById('r6').innerText = "- " + q6.toLocaleString() + " 萬";
+        document.getElementById('r1').innerText = "- " + Math.round(q1).toLocaleString() + " \u842c"; 
+        document.getElementById('r2').innerText = "- " + Math.round(q2_all).toLocaleString() + " \u842c"; 
+        document.getElementById('r3').innerText = "- " + q3.toLocaleString() + " \u842c"; 
+        document.getElementById('r4').innerText = "- " + q4.toLocaleString() + " \u842c"; 
+        document.getElementById('r5').innerText = "- " + Math.round(q5).toLocaleString() + " \u842c"; 
+        document.getElementById('r6').innerText = "- " + q6.toLocaleString() + " \u842c";
         
         const rf = document.getElementById('rf'); 
-        rf.innerText = Math.round(fin).toLocaleString() + " 萬"; 
+        rf.innerText = Math.round(fin).toLocaleString() + " \u842c"; 
         if(fin < 0) rf.style.color = "#FF8A8A"; else rf.style.color = "#81C784";
     }
 
     calculate();
 
+      
 </script>
 </body>
 </html>
